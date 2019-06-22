@@ -71,31 +71,23 @@ public class Loader {
 
         int[] setPlanOperationRandom = generateTwoNumbersRandom();
         setPlanOperationRandom[2] = generateNumberOperationRandom();
+
         makeAndSendMessage(socket, setPlanOperationRandom);
 
-        byte[] resultOperationInBytes = new byte[9];
-
-        socket.getInputStream().read(resultOperationInBytes);
-        int resultOperation = convertByteArrayToInt(resultOperationInBytes);
-        System.out.println("Resultado processado pelo servidor recebido");
-        System.out.println("Resultado da operacao: " + resultOperation);
-        socket.close();
-
         do {
-            Socket socketConst = new Socket(this.host, this.porta);
-            Thread.sleep(5000);
-            int[] setOperationConstRandom = {generateOneNumberRandom(), resultOperation, generateNumberOperationRandom()};
-            makeAndSendMessage(socketConst, setOperationConstRandom);
+            byte[] resultOperationInBytes = new byte[9];
 
-            byte[] resultOperationConstInBytes = new byte[9];
-
-            socketConst.getInputStream().read(resultOperationConstInBytes);
-            int resultOperationConst = convertByteArrayToInt(resultOperationConstInBytes);
+            socket.getInputStream().read(resultOperationInBytes);
+            int resultOperation = convertByteArrayToInt(resultOperationInBytes);
             System.out.println("Resultado processado pelo servidor recebido");
-            System.out.println("Resultado da operacao: " + resultOperationConst);
+            System.out.println("Resultado da operacao: " + resultOperation);
             socket.close();
-        } while (true);
 
+            int[] setOperationConstRandom = {generateOneNumberRandom(), resultOperation, generateNumberOperationRandom()};
+            Thread.sleep(5000);
+            socket = new Socket(this.host, this.porta);
+            makeAndSendMessage(socket, setOperationConstRandom);
+        } while (true);
     }
 
     private void makeAndSendMessage(Socket socket, int[] setPlanOperationRandom) throws IOException {
