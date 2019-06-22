@@ -15,15 +15,15 @@ import java.util.Random;
 public class Loader {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new Loader("localhost", 12345).run(); // dispara cliente
+        new Loader("localhost", 12345).executa(); // dispara cliente
     }
 
     private String host;
-    private int port;
+    private int porta;
 
-    public Loader (String host, int port) {
+    public Loader (String host, int porta) {
         this.host = host;
-        this.port = port;
+        this.porta = porta;
     }
 
     /**
@@ -65,8 +65,8 @@ public class Loader {
         return random.nextInt(2) + 1; //numeros entre 1|-|2
     }
 
-    public void run() throws IOException, InterruptedException {
-        Socket socket = new Socket(this.host, this.port);
+    public void executa() throws IOException, InterruptedException {
+        Socket socket = new Socket(this.host, this.porta);
         System.out.println("O cliente se conectou ao servidor!");
 
         int[] setPlanOperationRandom = generateTwoNumbersRandom();
@@ -74,7 +74,7 @@ public class Loader {
 
         makeAndSendMessage(socket, setPlanOperationRandom);
 
-        while (true) {
+        do {
             byte[] resultOperationInBytes = new byte[9];
 
             socket.getInputStream().read(resultOperationInBytes);
@@ -85,16 +85,11 @@ public class Loader {
 
             int[] setOperationConstRandom = {generateOneNumberRandom(), resultOperation, generateNumberOperationRandom()};
             Thread.sleep(5000);
-            socket = new Socket(this.host, this.port);
+            socket = new Socket(this.host, this.porta);
             makeAndSendMessage(socket, setOperationConstRandom);
-        }
+        } while (true);
     }
 
-    /**
-     * Constroi e envia uma mensaagem para server de destino do socket
-     * @param socket canal de destino da mensagem para o server
-     * @param setPlanOperationRandom conjunto de operacao com tres parametros {x,y,op}
-     */
     private void makeAndSendMessage(Socket socket, int[] setPlanOperationRandom) throws IOException {
         byte[] setOperation = new byte[9];
         setOperation = convertIntArrayToByteArray(setPlanOperationRandom);

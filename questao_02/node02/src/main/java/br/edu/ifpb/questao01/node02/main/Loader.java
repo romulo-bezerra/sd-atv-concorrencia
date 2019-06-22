@@ -9,20 +9,20 @@ import java.nio.ByteBuffer;
 public class Loader {
 
     public static void main(String[] args) throws IOException {
-        new Loader("localhost", 12345).run(); // inicia o servidor
+        new Loader("localhost", 12345).executa(); // inicia o servidor
     }
 
-    private int port;
+    private int porta;
     private String host;
 
-    public Loader (String host, int port) {
+    public Loader (String host, int porta) {
         this.host = host;
-        this.port = port;
+        this.porta = porta;
     }
 
-    public void run() throws IOException {
+    public void executa () throws IOException {
         ServerSocket server = new ServerSocket();
-        server.bind(new InetSocketAddress(this.host, this.port));
+        server.bind(new InetSocketAddress(this.host, this.porta));
         System.out.println("Aguardando conexão na porta 12345...");
 
         byte[] setOperation = new byte[9];
